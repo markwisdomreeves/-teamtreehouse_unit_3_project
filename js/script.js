@@ -65,7 +65,7 @@ $otherJob.on('change', function(e){
  });
 });
 
-/* ############## I AM GOING FOR EXCEL EXPECTION GRADE (LIVE VALIDATION ON THE USERNAME,
+/* ############## I AM GOING FOR AN EXCEL EXPECTION GRADE (LIVE VALIDATION ON THE USERNAME,
      EMAIL AND PAYMENT CARD SECTIONS) ############## */
 $(document).ready(function(){
     // use keyup event on user name field
@@ -313,7 +313,8 @@ const activitiesValidationFun = () => {
     }
 }
 
-//ON SUBMIT CREDIT CARD  VALIDATION FUNCTION
+/* ############## I AM ALSO GOING FOR AN EXCEL EXPECTION GRADE FOR THE ON SUBMIT VALIDATION  ############## */
+// ON SUBMIT CREDIT CARD  VALIDATION FUNCTION
 const creditCardValidationFun = () => {
         const $regexCardExpression = /^\d{13,16}$/; 
         // check if the credit card number is valid(bewteen 13 and 16 digits)
