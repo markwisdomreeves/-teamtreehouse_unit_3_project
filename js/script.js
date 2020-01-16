@@ -1,9 +1,6 @@
 
-// ALL VARIBLES
-// CHECKBOX VALIDATION ON SUBMIT
-const inValidCheckedBoxMessage = $('<span id="invalid_checked_box_message">Please check atlease one checkboxes</span>');
-const validCheckedBoxMessage = $('<span id="valid_checked_box_message">Thanks for checking</span>');
 
+// ALL VARIBLES
 // LIVE FORM VALIDATION MESSAGES FOR ALL FORM INPUT
 // username live input message variable
 const liveValidNameMessage = $('<span id="live_valid_name_message">Thanks, name field is valid</span>');
@@ -21,6 +18,15 @@ const liveInvalidZipcodeMessage = $('<span id="live_invalid_zipcode_message">Not
 const liveValidCvvCodeMessage = $('<span id="live_valid_cvv_message">Thanks, is valid</span>');
 const liveInvalidCvvCodeMessage = $('<span id="live_invalid_cvv_message">Cvv code not valid</span>');
 
+// ON SUBMIT VALIDATION CHECKBOX MESSAGE
+const checkboxesvalidation = $('<span class="error_message" id="error_activities" style="color: red">Please check atleast one activity.</span>');
+
+const $name = $('#name');
+const $email = $('#mail');
+const $cardNumber = $('#cc-num');
+const $zipCodeNumber = $('#zip');
+const $cvvCode = $('#cvv');
+
 const allCheckedActivities = $(".activities");
 const totalDivContainer = $("<div>Total Cost: $</div>");
 allCheckedActivities.append(totalDivContainer);
@@ -37,18 +43,30 @@ let dataCost = $("");
 let targetedCheckedValue = $("");
 let nameAttribute = $("");
 
-//These two paypal and bitcoin container will be hidden intially on page load
-$('#paypal').css("display", "none");
-$('#bitcoin').css("display", "none");
-
 $(document).ready(function(){
+   //These two paypal and bitcoin container will be hidden intially on page load
+    $('#paypal').css("display", "none");
+    $('#bitcoin').css("display", "none");
     $('#name').focus(); // set focus on the user name input on page load
     $('#other-title').hide() // hide the below input but show when javascript is disable 
     $('#color').hide(); // hide the color element initially on page load
     $('#design option:first').hide(); // hide the design element initially on page load
 })
 
-/* ############## LIVE VALIDATION ON THE USERNAME, EMAIL AND PAYMENT CARD SECTIONS ############## */
+// The other job title field
+$(document).ready(function(){
+const $otherJob = $('#title');
+$otherJob.on('change', function(e){
+    if ($(e.target).val() === 'other'){
+    $('#other-title').show();
+    } else {
+       $('#other-title').hide();
+    }
+ });
+});
+
+/* ############## I AM GOING FOR EXCEL EXPECTION GRADE (LIVE VALIDATION ON THE USERNAME,
+     EMAIL AND PAYMENT CARD SECTIONS) ############## */
 $(document).ready(function(){
     // use keyup event on user name field
     $("#name").keyup(function(){
@@ -153,65 +171,233 @@ $(document).ready(function(){
            liveValidCvvCodeMessage.css("display","none");
            return false;   
        }
-    });   
+    });
+
+    // name validation function
+    function validateName(){
+        // get value from name input
+        const name = $("#name").val();
+        const regexName = /^[A-Za-z]+\s?([A-Za-z]+)?$/; 
+        if(regexName.test(name)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+    // email validation function
+    function validateEmail(){
+        // get value from email input
+        const email = $("#mail").val();
+        const regexEmail = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        if(regexEmail.test(email)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+    // card number validation function
+    function validateCardNumber(){
+        // get value from card input
+        const cardValue = $("#cc-num").val();
+        const regexCardNumber = /^\d{13,16}$/;
+        if(regexCardNumber.test(cardValue)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+    // zip code validation function
+    function validateZipCode(){
+        // get zip code value
+        const zipCodeValue = $("#zip").val();
+        const regexZipCode = /^\d{5}$|^\d{5}-\d{4}$/;
+        if(regexZipCode.test(zipCodeValue)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+    // CVV code validation function
+    function validateCvvCode(){
+        // get cvv code value
+        const cvvValue = $("#cvv").val();
+        const regexCvvCode = /^[0-9]{3,3}$/;
+        if(regexCvvCode.test(cvvValue)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
 });
 
+// ONSUBMIT VALIDATION ERROR MESSAGES FOR ALL INPUT FIELDS
+// ON SUBMIT NAME INPUT VALIDATION FUNCTION
+const nameInputValidationFun = () => {
+    const $name = $('#name')
+    if (($name).val().length === 0) {
+        // checking of error when the length is greater than zero if there is an error
+        if($('#error_name').length > 0) {
+           return false;
+        } else {
+            // if the user name is not valid set the input text and border to red
+            $("#name").before(liveInvalidNameMessage)
+            $('#live_invalid_name_message').css({"font-size":"1em", "color":"red"});
+            $("#name").css("border", "2px solid red");
+            liveInvalidNameMessage.css("display","block");
+            liveValidNameMessage.css("display","none"); 
+            return false; 
+        }
+    } else {
+        // remove all error when input is not empty
+        $("#name").before(liveValidNameMessage)
+            $('#live_valid_name_message').css({"font-size":"1em", "color":"green"});
+            $("#name").css("border", "2px solid green");
+            liveInvalidNameMessage.css("display","none");
+            liveValidNameMessage.css("display","block");
+            return true;
+    }
+}
 
-// name validation function
-function validateName(){
-    // get value from name input
-    const name = $("#name").val();
-    const regexName = /^[A-Za-z]+\s?([A-Za-z]+)?$/; 
-    if(regexName.test(name)){
+// ON SUBMIT EMAIL INPUT VALIDATION FUNCTION
+const emailInputValidationFun = () => {
+    const $regexEmailExpresion = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    // checking for valid email form the user
+    const $isValidEmailExpresion = $regexEmailExpresion.test($email.val());
+    if ($isValidEmailExpresion){
+        // if the user email is valid set the input text and border to red
+        $("#mail").before(liveValidEmailMessage)
+        $('#live_valid_email_message').css({"font-size":"1em", "color":"green"});
+        $("#mail").css("border", "2px solid green");
+        liveInvalidEmailMessage.css("display","none");
+        liveValidEmailMessage.css("display","block");
         return true;
-    } else{
-        return false;
+    } else {
+        // checking if there is an error from the user
+        if($('#error_email').length > 0) 
+        {   return false;
+        } else {
+            // if the user email is not valid set the input text and border to red
+            $("#mail").before(liveInvalidEmailMessage)
+            $('#live_invalid_email_message').css({"font-size":"1em", "color":"red"});
+            $("#mail").css("border", "2px solid red");
+            liveInvalidEmailMessage.css("display","block");
+            liveValidEmailMessage.css("display","none");
+            return false;
+        }
+    }
+
+}
+
+// ON SUBMIT ACTIVITIES CHECKED BOXES VALIDATION FUNCTION
+const activitiesValidationFun = () => {
+    let $numChecked = 0;
+    let $checkbox = $('.activities input[type="checkbox"]');
+    const $legend = $('.activities legend');
+    //loops through checkbox items to check for 'checked' property
+    for (i = 0; i < $checkbox.length; i ++){ 
+        if ($checkbox.eq(i).prop('checked')) {
+            $numChecked = $numChecked + 1;
+        } 
+    }
+    if ($numChecked < 1){
+        if($('#error_activities').length > 0) 
+        {   return false;
+        } else { 
+            $legend.after(checkboxesvalidation);
+            return false;
+        }
+    } else {
+        $('#error_activities').css({"display":"none"}); 
+        return true;
     }
 }
-// email validation function
-function validateEmail(){
-    // get value from email input
-    const email = $("#mail").val();
-    const regexEmail = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-    if(regexEmail.test(email)){
-        return true;
-    } else{
-        return false;
+
+//ON SUBMIT CREDIT CARD  VALIDATION FUNCTION
+const creditCardValidationFun = () => {
+        const $regexCardExpression = /^\d{13,16}$/; 
+        // check if the credit card number is valid(bewteen 13 and 16 digits)
+        const $isValidCardExpression = $regexCardExpression.test($cardNumber.val());
+        if ($cardNumber.val().length > 0 && $isValidCardExpression == true){
+            // if the user credit credit number is valid set the input text and border to red
+            $("#cc-num").before(liveValidCreditNumberMessage)
+            $('#live_valid_card_message').css({"font-size":"1em", "color":"green"});
+            $("#cc-num").css("border", "2px solid green");
+            liveInvalidCreditNumberMessage.css("display","none");
+            liveValidCreditNumberMessage.css("display","block");
+            return true;
+        } else {
+            if($('#error_credit_card').length > 0) 
+            {   return false;
+            } else {
+            // if the user credit card number is not valid set the input text and border to red
+            $("#cc-num").before(liveInvalidCreditNumberMessage)
+            $('#live_invalid_card_message').css({"font-size":"1em", "color":"red"});
+            $("#cc-num").css("border", "2px solid red");
+            liveInvalidCreditNumberMessage.css("display","block");
+            liveValidCreditNumberMessage.css("display","none");
+            return false;
+            }
+        }
     }
-}
-// card number validation function
-function validateCardNumber(){
-    // get value from card input
-    const cardValue = $("#cc-num").val();
-    const regexCardNumber = /^\d{13,16}$/;
-    if(regexCardNumber.test(cardValue)){
-        return true;
-    } else{
-        return false;
+
+    // ON SUBMIT ZIPCODE INPUT VALIDATION FUNCTION
+    const zipcodeValidationFun = () =>{
+        const $regexZipCodeExpreesion = /^\d{5}$|^\d{5}-\d{4}$/;
+        // checking for valid zipcode from user 
+        const $isValidZipCode = $regexZipCodeExpreesion.test($zipCodeNumber.val());
+        // if there is a valid input do not dispaly an error message 
+        if ($zipCodeNumber.val().length > 0 && $isValidZipCode == true){
+            // if the user zip code is valid set the input text and border to red
+            $("#zip").before(liveValidZipcodeMessage)
+            $('#live_valid_zipcode_message').css({"font-size":"1em", "color":"green"});
+            $("#zip").css("border", "2px solid green");
+            liveInvalidZipcodeMessage.css("display","none");
+            liveValidZipcodeMessage.css("display","block");
+            return true;
+            // else, display an error message
+        } else {
+            if($('#error_zipcode').length > 0)
+            {   return false;
+            } else {
+            // if the user zip code is not valid set the input text and border to red
+           $("#zip").before(liveInvalidZipcodeMessage)
+           $('#live_invalid_zipcode_message').css({"font-size":"1em", "color":"red"});
+           $("#zip").css("border", "2px solid red");
+           liveInvalidZipcodeMessage.css("display","block");
+           liveValidZipcodeMessage.css("display","none");
+           return false; 
+            }
+        }
     }
-}
-// zip code validation function
-function validateZipCode(){
-    // get zip code value
-    const zipCodeValue = $("#zip").val();
-    const regexZipCode = /^\d{5}$|^\d{5}-\d{4}$/;
-    if(regexZipCode.test(zipCodeValue)){
-        return true;
-    } else{
-        return false;
+
+   // ON SUBMIT CVV INPUT VALIDATION FUNCTION
+    const cvvCodeValidationFun = () => {
+        const $regexCvvCodeExpreesion = /^[0-9]{3,3}$/;
+        // checking if the cvv code is valid
+        const $isValidCvvExpression = $regexCvvCodeExpreesion.test($cvvCode.val());
+        if ($cvvCode.val().length > 0 && $isValidCvvExpression == true){
+             // if the user cvv code is valid set the input text and border to red
+           $("#cvv").before(liveValidCvvCodeMessage)
+           $('#live_valid_cvv_message').css({"font-size":"1em", "color":"green"});
+           $("#cvv").css("border", "2px solid green");
+           liveInvalidCvvCodeMessage.css("display","none");
+           liveValidCvvCodeMessage.css("display","block");
+           return true;
+        } else {
+            if($('#error_cvvcode').length > 0)
+            {   return false;
+            } else {
+            // if the user cvv code is not valid set the input text and border to red
+           $("#cvv").before(liveInvalidCvvCodeMessage)
+           $('#live_invalid_cvv_message').css({"font-size":"1em", "color":"red"});
+           $("#cvv").css("border", "2px solid red");
+           liveInvalidCvvCodeMessage.css("display","block");
+           liveValidCvvCodeMessage.css("display","none");
+           return false; 
+            }
+        }
     }
-}
-// CVV code validation function
-function validateCvvCode(){
-    // get cvv code value
-    const cvvValue = $("#cvv").val();
-    const regexCvvCode = /^[0-9]{3,3}$/;
-    if(regexCvvCode.test(cvvValue)){
-        return true;
-    } else{
-        return false;
-    }
-}
 
 
 /* ############## ACTIVITIES / CHECKBOX SECTION ############## */
@@ -247,7 +433,6 @@ allCheckedActivities.change(function(event){
         }
     }
 })
-
 
 /* #################### T.SHIRT SECTION #################### */
 $('#design').on('change', function(){
@@ -288,63 +473,35 @@ $("#payment").change(function() {
         $('#paypal').css("display", "none");
         $('#bitcoin').css("display", "none");
       }
-  });
-
-  
-// ON SUBMIT FORM VALIDATION(VALIDATION FORM ALL INPUT WHEN FORM IS SUBMIT)
-  $("form").submit(function(event) {
-    event.preventDefault();
-    if(validateName() == "" || validateEmail() == "" ||
-      validateCardNumber() == "" || validateZipCode() == "" || 
-      validateCvvCode() == ""){
-        $("#name").before(liveInvalidNameMessage);
-        $("#mail").before(liveInvalidEmailMessage);
-        $("#cc-num").before(liveInvalidCreditNumberMessage);
-        $("#zip").before(liveInvalidZipcodeMessage);
-        $("#cvv").before(liveInvalidCvvCodeMessage);
-        $(".activities").before(inValidCheckedBoxMessage);
-        $('#live_invalid_name_message').css({"font-size":"1em", "color":"red"});
-        $('#live_invalid_email_message').css({"font-size":"1em", "color":"red"});
-        $('#live_invalid_card_message').css({"font-size":"1em", "color":"red"});
-        $('#live_invalid_zipcode_message').css({"font-size":"1em", "color":"red"});
-        $('#live_invalid_cvv_message').css({"font-size":"1em", "color":"red"});
-        $("#invalid_checked_box_message").css({"font-size":"1.5em", "color":"red"});
-        $("#name").css("border", "2px solid red");
-        $("#mail").css("border", "2px solid red");
-        $("#cc-num").css("border", "2px solid red");
-        $("#zip").css("border", "2px solid red");
-        $("#cvv").css("border", "2px solid red");
-        liveInvalidNameMessage.css("display","block");
-        liveInvalidEmailMessage.css("display","block");  
-        liveInvalidCreditNumberMessage.css("display","block");  
-        liveInvalidZipcodeMessage.css("display","block");  
-        liveInvalidCvvCodeMessage.css("display","block");
-        inValidCheckedBoxMessage.css("display", "block");
-        validCheckedBoxMessage.css("display", "none");
-        console.log("form did not submit...");
-        return false;
-     } else {
-        $("#name").css("border", "none");
-        $("#mail").css("border", "none");
-        $("#cc-num").css("border", "none");
-        $("#zip").css("border", "none");
-        $("#cvv").css("border", "none");
-        validCheckedBoxMessage.css("display", "none");
-        liveValidNameMessage.css("display","none");
-        liveValidEmailMessage.css("display","none");
-        liveValidCreditNumberMessage.css("display","none");
-        liveValidZipcodeMessage.css("display","none");
-        liveValidCvvCodeMessage.css("display","none");
-        $("#name").val(" ");
-        $("#mail").val(" ");
-        $("#cc-num").val(" ");
-        $("#zip").val(" ");
-        $("#cvv").val(" ");
-        $('#name').focus();
-        console.log("form submited...");
-        $("form")[0].reset(); // reseting the form after submit
-        return true;   
-    }
-
 });
+
+//SUBMIT HANDLER ON BUTTON - CHECKS IF MASTERVALIDATION FUNCTION RETURNS TRUE//
+$('form').submit(function(event) {
+    // event.preventDefault(); 
+    if (nameInputValidationFun() === false || 
+        emailInputValidationFun() === false ||
+        activitiesValidationFun() === false
+        ){
+            event.preventDefault();
+            if(nameInputValidationFun() === false){
+                nameInputValidationFun()
+            }
+            if(emailInputValidationFun() === false){
+                emailInputValidationFun()
+            }
+            if(activitiesValidationFun() === false){
+                activitiesValidationFun()
+            }
+            if(creditCardValidationFun() === false){
+                creditCardValidationFun()
+            }
+            if(zipcodeValidationFun() === false){
+                zipcodeValidationFun()
+            }
+            if(cvvCodeValidationFun() === false){
+                cvvCodeValidationFun()
+        }
+    }
+})
+
 
