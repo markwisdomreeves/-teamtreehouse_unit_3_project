@@ -1,6 +1,6 @@
 
-
 // ALL VARIBLES
+
 // LIVE FORM VALIDATION MESSAGES FOR ALL FORM INPUT
 // username live input message variable
 const liveValidNameMessage = $('<span id="live_valid_name_message">Thanks, name field is valid</span>');
@@ -65,8 +65,12 @@ $otherJob.on('change', function(e){
  });
 });
 
-/* ############## I AM GOING FOR AN EXCEL EXPECTION GRADE (LIVE VALIDATION ON THE USERNAME,
-     EMAIL AND PAYMENT CARD SECTIONS) ############## */
+/* ############## 
+     RIGHT NOW, I AM GOING EXPECTION GRADE THE LIVE VALIDATION ON THE USERNAME,
+     EMAIL AND PAYMENT CARD SECTIONS, BECAUSE I HAVE TRIED GET THE EMPTY FIELD VALIDATIONS BUT
+     IT IS STILL CONFUSING ME FOR NOW. BUT IN MY FREE TIME, I WILL CONTINUE MAKING A RESEARCH
+     TO GET IDEA, BUT FOR NOW, LET ME START PROJECT 4 AND MOVE ON. 
+############## */
 $(document).ready(function(){
     // use keyup event on user name field
     $("#name").keyup(function(){
@@ -313,8 +317,8 @@ const activitiesValidationFun = () => {
     }
 }
 
-/* ############## I AM ALSO GOING FOR AN EXCEL EXPECTION GRADE FOR THE ON SUBMIT VALIDATION  ############## */
-// ON SUBMIT CREDIT CARD  VALIDATION FUNCTION
+
+//ON SUBMIT CREDIT CARD  VALIDATION FUNCTION
 const creditCardValidationFun = () => {
         const $regexCardExpression = /^\d{13,16}$/; 
         // check if the credit card number is valid(bewteen 13 and 16 digits)
@@ -476,12 +480,14 @@ $("#payment").change(function() {
       }
 });
 
-//SUBMIT HANDLER ON BUTTON - CHECKS IF MASTERVALIDATION FUNCTION RETURNS TRUE//
+//SUBMIT HANDLER ON BUTTON - CHECKS IF ALL THE VALIDATIONS FUNCTION RETURNS TRUE//
 $('form').submit(function(event) {
-    // event.preventDefault(); 
     if (nameInputValidationFun() === false || 
         emailInputValidationFun() === false ||
-        activitiesValidationFun() === false
+        activitiesValidationFun() === false ||
+        creditCardValidationFun() === false ||
+        zipcodeValidationFun() === false ||
+        cvvCodeValidationFun() === false
         ){
             event.preventDefault();
             if(nameInputValidationFun() === false){
@@ -501,6 +507,7 @@ $('form').submit(function(event) {
             }
             if(cvvCodeValidationFun() === false){
                 cvvCodeValidationFun()
+
         }
     }
 })
