@@ -3,20 +3,20 @@
 
 // LIVE FORM VALIDATION MESSAGES FOR ALL FORM INPUT
 // username live input message variable
-const liveValidNameMessage = $('<span id="live_valid_name_message">Thanks, name field is valid</span>');
-const liveInvalidNameMessage = $('<span id="live_invalid_name_message">Please enter a vilid name: letters only</span>');
+const liveValidNameMessage = $('<span class="error" id="live_valid_name_message">Thanks, name field is valid</span>');
+const liveInvalidNameMessage = $('<span class="error" id="live_invalid_name_message">Please enter a vilid name: letters only</span>');
 // email live input message variable
-const liveValidEmailMessage = $('<span id="live_valid_email_message">Thanks, email field is valid</span>');
-const liveInvalidEmailMessage = $('<span id="live_invalid_email_message">Please enter a valid email</span>');
+const liveValidEmailMessage = $('<span class="error" id="live_valid_email_message">Thanks, email field is valid</span>');
+const liveInvalidEmailMessage = $('<span class="error" id="live_invalid_email_message">Please enter a valid email</span>');
 // credit card number live input message variable
-const liveValidCreditNumberMessage = $('<span id="live_valid_card_message">Thanks, this is a valid card number</span>');
-const liveInvalidCreditNumberMessage = $('<span id="live_invalid_card_message">Must be between (13 to 16 digits long)</span>');
+const liveValidCreditNumberMessage = $('<span class="error" id="live_valid_card_message">Thanks, this is a valid card number</span>');
+const liveInvalidCreditNumberMessage = $('<span class="error" id="live_invalid_card_message">Must be between (13 to 16 digits long)</span>');
 // zipcode live input message
-const liveValidZipcodeMessage = $('<span id="live_valid_zipcode_message">Thanks, is valid</span>');
-const liveInvalidZipcodeMessage = $('<span id="live_invalid_zipcode_message">Not valid zipcode</span>');
+const liveValidZipcodeMessage = $('<span class="error" id="live_valid_zipcode_message">Thanks, is valid</span>');
+const liveInvalidZipcodeMessage = $('<span class="error" id="live_invalid_zipcode_message">Not valid zipcode</span>');
 // cvv live input message
-const liveValidCvvCodeMessage = $('<span id="live_valid_cvv_message">Thanks, is valid</span>');
-const liveInvalidCvvCodeMessage = $('<span id="live_invalid_cvv_message">Cvv code not valid</span>');
+const liveValidCvvCodeMessage = $('<span class="error" id="live_valid_cvv_message">Thanks, is valid</span>');
+const liveInvalidCvvCodeMessage = $('<span class="error" id="live_invalid_cvv_message">Cvv code not valid</span>');
 
 // ON SUBMIT VALIDATION CHECKBOX MESSAGE
 const checkboxesvalidation = $('<span class="error_message" id="error_activities" style="color: red">Please check atleast one activity.</span>');
@@ -31,22 +31,37 @@ const allCheckedActivities = $(".activities");
 const totalDivContainer = $("<div>Total Cost: $</div>");
 allCheckedActivities.append(totalDivContainer);
 let totalActivityCost = 0;
+
 const paymentContainer = $('option[value="select method"]');
 paymentContainer.css("display", "none"); //hide selected method on page load
 const creditCard = document.querySelector('option[value="credit card"]');
 const paypal = document.querySelector('option[value="paypal"]');
 const bitcoin = document.querySelector('option[value="bitcoin"]');
-creditCard.selected = 'true'; //credit card will be display intially
+const paymentMethod = document.getElementById('payment');
+
+const creditCardDiv = document.getElementById('credit-card');
+const paypalDiv = document.getElementById('paypal');
+const bitcoinDiv = document.getElementById('bitcoin');
+const button = document.getElementsByTagName('button')[0];
+
+
+creditCard.selected = 'true';//credit card will be display intially
+//These two paypal and bitcoin container will be hidden intially on page load
+// $('#paypal').css("display", "none");
+// $('#bitcoin').css("display", "none");
+
+//Hiding info about paypal and bitcoin
+paypalDiv.style.display = 'none';
+bitcoinDiv.style.display = 'none';
+
 let allElementItems = $("");
 let date_and_time_attr = $("");
 let dataCost = $("");
 let targetedCheckedValue = $("");
 let nameAttribute = $("");
 
+
 $(document).ready(function(){
-   //These two paypal and bitcoin container will be hidden intially on page load
-    $('#paypal').css("display", "none");
-    $('#bitcoin').css("display", "none");
     $('#name').focus(); // set focus on the user name input on page load
     $('#other-title').hide() // hide the below input but show when javascript is disable 
     $('#color').hide(); // hide the color element initially on page load
@@ -64,6 +79,40 @@ $otherJob.on('change', function(e){
     }
  });
 });
+
+
+// This add Event Listener is use for changes in the payment methods
+paymentMethod.addEventListener('change', () => {
+    if (paypal.selected) {
+      creditCardDiv.style.display = 'none';
+      paypalDiv.style.display = 'block';
+      bitcoinDiv.style.display = 'none';
+    } else if (bitcoin.selected) {
+      creditCardDiv.style.display = 'none';
+      paypalDiv.style.display = 'none';
+      bitcoinDiv.style.display = 'block';
+    } else if (creditCard.selected) {
+      creditCardDiv.style.display = 'block';
+      paypalDiv.style.display = 'none';
+      bitcoinDiv.style.display = 'none';
+    }
+  });
+  
+/* This change method will clear or erase any data that was previously enter 
+   by the user into the drop down select payment option input. That is, when the user
+   enter an information into the credit card inputs and decided to switch to
+   the paypal or bitcoin section, all data that were previously into the credit card
+   section will be clear or erase, this helps to prevent our credit section from hackers */
+$("#payment").change(() =>{
+      if (!$("option[value='credit card']").prop("selected")){
+        $("#credit-card input").each((i, input) => { $(input).val("") && !$(input).val() > 0;})
+        if ($(".credit-card .error").length !== 0){
+          $(".credit-card .error").remove();
+        }
+      }
+  });
+
+
 
 /* ############## 
      RIGHT NOW, I AM GOING EXPECTION GRADE THE LIVE VALIDATION ON THE USERNAME,
@@ -177,6 +226,7 @@ $(document).ready(function(){
        }
     });
 
+    
     // name validation function
     function validateName(){
         // get value from name input
@@ -234,6 +284,7 @@ $(document).ready(function(){
     }
 
 });
+
 
 // ONSUBMIT VALIDATION ERROR MESSAGES FOR ALL INPUT FIELDS
 // ON SUBMIT NAME INPUT VALIDATION FUNCTION
@@ -439,6 +490,7 @@ allCheckedActivities.change(function(event){
     }
 })
 
+
 /* #################### T.SHIRT SECTION #################### */
 $('#design').on('change', function(){
     if ($('#design option:selected').val() == "js puns"){
@@ -461,55 +513,33 @@ $('#design').on('change', function(){
     }
 });
 
-/* #################### PAYMENT METHOD SECTION #################### */
-$("#payment").change(function() {
-    if (paypal.selected) {
-        $('#credit-card').css("display", "none");
-        $('#paypal').css("display", "block");
-        $('#bitcoin').css("display", "none");
-
-      } else if (bitcoin.selected) {
-        $('#credit-card').css("display", "none");
-        $('#paypal').css("display", "none");
-        $('#bitcoin').css("display", "block");
-
-      } else if (creditCard.selected) {
-        $('#credit-card').css("display", "block");
-        $('#paypal').css("display", "none");
-        $('#bitcoin').css("display", "none");
-      }
-});
-
-//SUBMIT HANDLER ON BUTTON - CHECKS IF ALL THE VALIDATIONS FUNCTION RETURNS TRUE//
-$('form').submit(function(event) {
-    if (nameInputValidationFun() === false || 
-        emailInputValidationFun() === false ||
-        activitiesValidationFun() === false ||
-        creditCardValidationFun() === false ||
-        zipcodeValidationFun() === false ||
-        cvvCodeValidationFun() === false
-        ){
-            event.preventDefault();
-            if(nameInputValidationFun() === false){
-                nameInputValidationFun()
-            }
-            if(emailInputValidationFun() === false){
-                emailInputValidationFun()
-            }
-            if(activitiesValidationFun() === false){
-                activitiesValidationFun()
-            }
-            if(creditCardValidationFun() === false){
-                creditCardValidationFun()
-            }
-            if(zipcodeValidationFun() === false){
-                zipcodeValidationFun()
-            }
-            if(cvvCodeValidationFun() === false){
-                cvvCodeValidationFun()
-
-        }
+// SUBMIT HANDLER ON BUTTON - CHECKS IF ALL THE VALIDATIONS FUNCTION RETURNS TRUE ON SUBMIT FORM
+button.addEventListener('click', (event) => {
+    if (creditCard.selected) {
+       nameInputValidationFun() 
+       emailInputValidationFun() 
+       activitiesValidationFun()
+       creditCardValidationFun() 
+       zipcodeValidationFun()
+       cvvCodeValidationFun() 
+    if (!nameInputValidationFun()  || !emailInputValidationFun() || !activitiesValidationFun() || 
+        !creditCardValidationFun() || !zipcodeValidationFun() || !cvvCodeValidationFun()) {
+        event.preventDefault();
     }
-})
-
+   } else if (!creditCard.selected) {
+        nameInputValidationFun() 
+        emailInputValidationFun() 
+        activitiesValidationFun()
+        if (!nameInputValidationFun() || !emailInputValidationFun() || !activitiesValidationFun()) {
+        event.preventDefault();
+    } 
+   } else {
+        nameInputValidationFun() 
+        emailInputValidationFun() 
+        activitiesValidationFun()
+        if (nameInputValidationFun() || emailInputValidationFun() || activitiesValidationFun()) {
+        event.preventDefault();
+    }  
+  }
+});
 
