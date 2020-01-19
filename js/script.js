@@ -114,12 +114,8 @@ $("#payment").change(() =>{
 
 
 
-/* ############## 
-     RIGHT NOW, I AM GOING EXPECTION GRADE THE LIVE VALIDATION ON THE USERNAME,
-     EMAIL AND PAYMENT CARD SECTIONS, BECAUSE I HAVE TRIED GET THE EMPTY FIELD VALIDATIONS BUT
-     IT IS STILL CONFUSING ME FOR NOW. BUT IN MY FREE TIME, I WILL CONTINUE MAKING A RESEARCH
-     TO GET IDEA, BUT FOR NOW, LET ME START PROJECT 4 AND MOVE ON. 
-############## */
+ 
+ /* ##############  LIVE VALIDATION FOR ALL INPUTS (GREAT USERS EXPERIENCE) ############## */
 $(document).ready(function(){
     // use keyup event on user name field
     $("#name").keyup(function(){
